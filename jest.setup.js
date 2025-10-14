@@ -4,6 +4,11 @@
 // 관련 파일: jest.config.js, __tests__/signup-form.test.tsx
 
 import '@testing-library/jest-dom'
+import { TextEncoder, TextDecoder } from 'util'
+
+// Polyfill for TextEncoder/TextDecoder
+global.TextEncoder = TextEncoder
+global.TextDecoder = TextDecoder
 
 // 테스트 환경 변수 설정
 process.env.NEXT_PUBLIC_SUPABASE_URL = 'https://bfiigzhcyahgevvmtewr.supabase.co'

@@ -6,9 +6,10 @@
 'use server'
 
 import { db } from '@/lib/db'
-import { notes } from '@/drizzle/schema'
+import { notes, userProfiles } from '@/drizzle/schema'
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { eq, desc, count } from 'drizzle-orm'
 
 /**
  * 노트 생성 Server Action
@@ -64,27 +65,103 @@ export async function createNote(data: {
       }
     }
 
-    // 3. DrizzleORM insert 쿼리 실행
+    // 3. user_profiles에 사용자가 없으면 추가 (자동 생성)
+    try {
+      await db.insert(userProfiles).values({
+        id: user.id,
+        onboardingCompleted: false,
+      })
+    } catch (e) {
+      // user_profiles에 이미 존재하는 경우 무시
+    }
+
+    // 4. DrizzleORM insert 쿼리 실행
     const [newNote] = await db.insert(notes).values({
       userId: user.id,
       title: title.trim(),
       content: content.trim(),
     }).returning({ id: notes.id })
 
-    // 4. 노트 목록 페이지 캐시 무효화
+    // 5. 노트 목록 페이지 캐시 무효화
     revalidatePath('/notes')
 
-    // 5. 성공 응답 반환
+    // 6. 성공 응답 반환
     return {
       success: true,
       noteId: newNote.id,
     }
   } catch (error) {
-    // 6. 에러 핸들링
+    // 7. 에러 핸들링
     console.error('노트 생성 중 오류 발생:', error)
     return {
       success: false,
       error: '노트 저장에 실패했습니다. 잠시 후 다시 시도해주세요.',
+    }
+  }
+}
+
+/**
+ * 노트 목록 조회 Server Action
+ * 로그인한 사용자의 노트 목록을 페이지네이션과 함께 조회합니다.
+ * 
+ * @param page - 조회할 페이지 번호 (기본값: 1)
+ * @returns 노트 목록, 페이지네이션 정보, 에러 메시지
+ */
+export async function getNotes(page: number = 1) {
+  try {
+    // 1. 사용자 인증 확인
+    const supabase = await createClient()
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+
+    if (authError || !user) {
+      return {
+        success: false,
+        error: '로그인이 필요합니다.',
+        notes: [],
+        totalCount: 0,
+        currentPage: 1,
+        totalPages: 0,
+      }
+    }
+
+    // 2. 페이지네이션 계산
+    const limit = 20
+    const validPage = Math.max(1, Math.floor(page)) // 최소 1, 정수로 변환
+    const offset = (validPage - 1) * limit
+
+    // 3. DrizzleORM 쿼리: 노트 목록 + 전체 개수 병렬 실행
+    const [notesList, totalCountResult] = await Promise.all([
+      db.select()
+        .from(notes)
+        .where(eq(notes.userId, user.id))
+        .orderBy(desc(notes.createdAt))
+        .limit(limit)
+        .offset(offset),
+      
+      db.select({ count: count() })
+        .from(notes)
+        .where(eq(notes.userId, user.id))
+    ])
+
+    const totalCount = Number(totalCountResult[0]?.count ?? 0)
+    const totalPages = Math.ceil(totalCount / limit)
+
+    return {
+      success: true,
+      notes: notesList,
+      totalCount,
+      currentPage: validPage,
+      totalPages,
+    }
+  } catch (error) {
+    console.error('노트 목록 조회 중 오류 발생:', error)
+    return {
+      success: false,
+      error: '노트 목록을 불러오는데 실패했습니다.',
+      notes: [],
+      totalCount: 0,
+      currentPage: 1,
+      totalPages: 0,
     }
   }
 }
