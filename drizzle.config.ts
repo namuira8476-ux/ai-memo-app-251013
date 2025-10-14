@@ -2,6 +2,8 @@
 // Drizzle Kit 설정 파일
 // 데이터베이스 마이그레이션과 스키마 관리를 위한 설정
 // 관련 파일: drizzle/schema.ts, .env.local
+import dotenv from 'dotenv'
+dotenv.config({path: '.env.local'})
 
 import { defineConfig } from 'drizzle-kit'
 
