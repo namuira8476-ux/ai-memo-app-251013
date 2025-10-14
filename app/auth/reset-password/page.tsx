@@ -7,8 +7,13 @@ import { PasswordResetRequestForm } from '@/components/auth/password-reset-reque
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 
-export default async function ResetPasswordPage() {
+export default async function ResetPasswordPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ error?: string }>
+}) {
   const supabase = await createClient()
+  const params = await searchParams
   
   // 이미 로그인된 사용자는 홈으로 리다이렉트
   const { data: { user } } = await supabase.auth.getUser()
@@ -29,6 +34,17 @@ export default async function ResetPasswordPage() {
         </div>
         
         <div className="bg-white py-8 px-6 shadow rounded-lg">
+          {params.error && (
+            <div className="mb-4 text-sm text-red-600 bg-red-50 p-3 rounded-md">
+              {params.error === 'invalid-token' && '비밀번호 재설정 링크가 유효하지 않거나 만료되었습니다. 다시 요청해주세요.'}
+              {params.error === 'no-user' && '사용자 정보를 찾을 수 없습니다. 다시 요청해주세요.'}
+              {params.error.includes('expired') && '비밀번호 재설정 링크가 만료되었습니다. 다시 요청해주세요.'}
+              {params.error.includes('invalid') && !params.error.includes('expired') && '비밀번호 재설정 링크가 유효하지 않습니다. 다시 요청해주세요.'}
+              {!params.error.includes('expired') && !params.error.includes('invalid') && params.error !== 'invalid-token' && params.error !== 'no-user' && 
+                '비밀번호 재설정 중 오류가 발생했습니다. 다시 시도해주세요.'}
+            </div>
+          )}
+          
           <PasswordResetRequestForm />
           
           <div className="mt-6 text-center">
