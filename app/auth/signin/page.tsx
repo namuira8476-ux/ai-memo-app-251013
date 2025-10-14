@@ -7,7 +7,11 @@ import { SignInForm } from '@/components/auth/signin-form'
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 
-export default async function SignInPage() {
+export default async function SignInPage({
+  searchParams,
+}: {
+  searchParams: { message?: string }
+}) {
   const supabase = await createClient()
   
   // 이미 로그인된 사용자는 홈으로 리다이렉트
@@ -29,9 +33,21 @@ export default async function SignInPage() {
         </div>
         
         <div className="bg-white py-8 px-6 shadow rounded-lg">
+          {searchParams.message === 'password-updated' && (
+            <div className="mb-4 text-sm text-green-600 bg-green-50 p-3 rounded-md">
+              비밀번호가 성공적으로 업데이트되었습니다. 새 비밀번호로 로그인해주세요.
+            </div>
+          )}
+          
           <SignInForm />
           
-          <div className="mt-6 text-center">
+          <div className="mt-6 text-center space-y-2">
+            <p className="text-sm text-gray-600">
+              비밀번호를 잊으셨나요?{' '}
+              <a href="/auth/reset-password" className="font-medium text-blue-600 hover:text-blue-500">
+                비밀번호 재설정
+              </a>
+            </p>
             <p className="text-sm text-gray-600">
               계정이 없으신가요?{' '}
               <a href="/auth/signup" className="font-medium text-blue-600 hover:text-blue-500">
