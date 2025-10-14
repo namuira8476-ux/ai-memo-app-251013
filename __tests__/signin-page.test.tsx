@@ -34,7 +34,7 @@ describe('SignInPage', () => {
       },
     })
 
-    const page = await SignInPage({ searchParams: {} })
+    const page = await SignInPage({ searchParams: Promise.resolve({}) })
     render(page)
 
     expect(screen.getByText('AI 메모장 로그인')).toBeInTheDocument()
@@ -53,7 +53,7 @@ describe('SignInPage', () => {
       },
     })
 
-    await SignInPage({ searchParams: {} })
+    await SignInPage({ searchParams: Promise.resolve({}) })
 
     expect(mockRedirect).toHaveBeenCalledWith('/')
   })
@@ -65,7 +65,7 @@ describe('SignInPage', () => {
       },
     })
 
-    const page = await SignInPage({ searchParams: {} })
+    const page = await SignInPage({ searchParams: Promise.resolve({}) })
     render(page)
 
     const signupLink = screen.getByRole('link', { name: '회원가입하기' })

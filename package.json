@@ -9,7 +9,13 @@
         "lint": "eslint",
         "test": "jest",
         "test:watch": "jest --watch",
-        "test:coverage": "jest --coverage"
+        "test:coverage": "jest --coverage",
+        "drizzle-kit:generate": "drizzle-kit generate",
+        "drizzle-kit:push": "drizzle-kit push",
+        "drizzle-kit:studio": "drizzle-kit studio",
+        "drizzle-kit:pull": "drizzle-kit pull",
+        "drizzle-kit:check": "drizzle-kit check",
+        "drizzle-kit:up": "drizzle-kit up"
     },
     "dependencies": {
         "@hookform/resolvers": "^5.2.2",
@@ -19,8 +25,10 @@
         "@supabase/supabase-js": "^2.75.0",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
+        "drizzle-orm": "^0.44.6",
         "lucide-react": "^0.544.0",
         "next": "15.5.3",
+        "postgres": "^3.4.7",
         "react": "19.1.0",
         "react-dom": "19.1.0",
         "react-hook-form": "^7.65.0",
@@ -35,6 +43,7 @@
         "@types/node": "^20",
         "@types/react": "^19",
         "@types/react-dom": "^19",
+        "drizzle-kit": "^0.31.5",
         "eslint": "^9",
         "eslint-config-next": "15.5.3",
         "jest": "^30.2.0",

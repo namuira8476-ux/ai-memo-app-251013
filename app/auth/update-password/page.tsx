@@ -13,7 +13,7 @@ export default async function UpdatePasswordPage() {
   // 현재 사용자 정보 확인 (비밀번호 재설정 토큰이 유효한지 확인)
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) {
-    redirect('/auth/reset-password')
+    redirect('/auth/reset-password?error=no-user')
   }
 
   return (

@@ -10,9 +10,10 @@ import { redirect } from 'next/navigation'
 export default async function SignInPage({
   searchParams,
 }: {
-  searchParams: { message?: string }
+  searchParams: Promise<{ message?: string }>
 }) {
   const supabase = await createClient()
+  const params = await searchParams
   
   // 이미 로그인된 사용자는 홈으로 리다이렉트
   const { data: { user } } = await supabase.auth.getUser()
@@ -33,7 +34,7 @@ export default async function SignInPage({
         </div>
         
         <div className="bg-white py-8 px-6 shadow rounded-lg">
-          {searchParams.message === 'password-updated' && (
+          {params.message === 'password-updated' && (
             <div className="mb-4 text-sm text-green-600 bg-green-50 p-3 rounded-md">
               비밀번호가 성공적으로 업데이트되었습니다. 새 비밀번호로 로그인해주세요.
             </div>
