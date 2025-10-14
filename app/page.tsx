@@ -74,11 +74,18 @@ export default async function Home() {
                   메모 작성하기
                 </h3>
                 <p className="text-gray-600 mb-4">
-                  아직 메모 기능이 구현되지 않았습니다. 곧 만나보실 수 있습니다!
+                  제목과 내용을 입력하여 새로운 메모를 작성하세요!
                 </p>
-                <Button disabled>
-                  메모 작성 (준비 중)
-                </Button>
+                <Link href="/notes/new">
+                  <Button size="lg" className="w-full">
+                    새 메모 작성
+                  </Button>
+                </Link>
+                <Link href="/notes">
+                  <Button size="lg" variant="outline" className="w-full mt-3">
+                    내 메모 목록
+                  </Button>
+                </Link>
               </div>
             </div>
           )}
