@@ -1,7 +1,7 @@
 // app/notes/page.tsx
 // 노트 목록 페이지
-// 로그인한 사용자의 노트 목록을 페이지네이션과 함께 표시
-// 관련 파일: lib/actions/notes.ts, components/notes/note-card.tsx
+// 로그인한 사용자의 노트 목록을 페이지네이션 및 정렬과 함께 표시
+// 관련 파일: lib/actions/notes.ts, components/notes/note-card.tsx, components/notes/sort-select.tsx
 
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
@@ -13,13 +13,14 @@ import { NoteCard } from '@/components/notes/note-card'
 import { Pagination } from '@/components/notes/pagination'
 import { EmptyState } from '@/components/notes/empty-state'
 import { NoteListSkeleton } from '@/components/notes/note-card-skeleton'
+import { SortSelect } from '@/components/notes/sort-select'
 
 interface NotesPageProps {
-  searchParams: Promise<{ page?: string }>
+  searchParams: Promise<{ page?: string; sort?: string }>
 }
 
-async function NotesList({ page }: { page: number }) {
-  const result = await getNotes(page)
+async function NotesList({ page, sortBy }: { page: number; sortBy: string }) {
+  const result = await getNotes(page, sortBy as any)
 
   if (!result.success) {
     return (
@@ -68,28 +69,36 @@ export default async function NotesPage({ searchParams }: NotesPageProps) {
     redirect('/auth/signin')
   }
 
-  // URL에서 페이지 번호 추출
+  // URL에서 페이지 번호 및 정렬 옵션 추출
   const params = await searchParams
   const page = parseInt(params.page || '1', 10)
+  const currentSort = params.sort || 'newest'
+
+  // 정렬 파라미터 검증
+  const validSorts = ['newest', 'oldest', 'title-asc', 'title-desc', 'updated']
+  const sortBy = validSorts.includes(currentSort) ? currentSort : 'newest'
 
   return (
     <div className="container max-w-6xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-8 flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">내 노트</h1>
           <p className="mt-2 text-sm text-gray-600">
             노트 목록을 관리하세요
           </p>
         </div>
-        <Link href="/notes/new">
-          <Button>
-            새 노트 작성
-          </Button>
-        </Link>
+        <div className="flex items-center gap-4">
+          <SortSelect currentSort={sortBy} />
+          <Link href="/notes/new">
+            <Button>
+              새 노트 작성
+            </Button>
+          </Link>
+        </div>
       </div>
 
       <Suspense fallback={<NoteListSkeleton />}>
-        <NotesList page={page} />
+        <NotesList page={page} sortBy={sortBy} />
       </Suspense>
     </div>
   )

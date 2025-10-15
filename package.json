@@ -18,11 +18,15 @@
         "drizzle-kit:up": "drizzle-kit up"
     },
     "dependencies": {
+        "@google/generative-ai": "^0.24.1",
         "@hookform/resolvers": "^5.2.2",
+        "@radix-ui/react-alert-dialog": "^1.1.15",
         "@radix-ui/react-label": "^2.1.7",
+        "@radix-ui/react-select": "^2.2.6",
         "@radix-ui/react-slot": "^1.2.3",
         "@supabase/ssr": "^0.7.0",
         "@supabase/supabase-js": "^2.75.0",
+        "@uiw/react-md-editor": "^4.0.8",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "drizzle-orm": "^0.44.6",

@@ -5,7 +5,7 @@
 
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -15,6 +15,8 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { createNote } from '@/lib/actions/notes'
+import { MarkdownEditor } from './markdown-editor'
+import { NoteAIAssistant } from './note-ai-assistant'
 
 // Zod 스키마 정의
 const noteFormSchema = z.object({
@@ -42,11 +44,17 @@ export function NoteForm({ mode, initialData, onSuccess }: NoteFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
+  const [aiSummary, setAiSummary] = useState('')
+  const [aiTags, setAiTags] = useState<string[]>([])
+  const [isEditingContent, setIsEditingContent] = useState(false)
+  const [currentContent, setCurrentContent] = useState(initialData?.content || '')
 
   // React Hook Form 설정
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors, isValid },
   } = useForm<NoteFormData>({
     resolver: zodResolver(noteFormSchema),
@@ -57,6 +65,16 @@ export function NoteForm({ mode, initialData, onSuccess }: NoteFormProps) {
     },
   })
 
+  // 폼 값 감시 (AI 기능을 위해)
+  const watchedContent = watch('content')
+
+  // 초기 상태에서 currentContent를 폼의 content 필드에 설정
+  useEffect(() => {
+    if (currentContent && !watchedContent) {
+      setValue('content', currentContent, { shouldValidate: true })
+    }
+  }, [currentContent, watchedContent, setValue])
+
   // 폼 제출 핸들러
   const onSubmit = async (data: NoteFormData) => {
     setIsSubmitting(true)
@@ -65,8 +83,11 @@ export function NoteForm({ mode, initialData, onSuccess }: NoteFormProps) {
 
     try {
       if (mode === 'create') {
-        // 노트 생성
-        const result = await createNote(data)
+        // 노트 생성 (현재 마크다운 내용 사용)
+        const result = await createNote({
+          title: data.title,
+          content: currentContent || data.content || '' // Use currentContent with fallback
+        })
 
         if (result.success) {
           setSuccessMessage('노트가 저장되었습니다')
@@ -100,6 +121,13 @@ export function NoteForm({ mode, initialData, onSuccess }: NoteFormProps) {
     router.push('/notes')
   }
 
+  // 마크다운 내용 업데이트 핸들러
+  const handleContentUpdate = async (content: string) => {
+    setCurrentContent(content)
+    // React Hook Form의 content 필드도 업데이트
+    setValue('content', content, { shouldValidate: true })
+  }
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       {/* 제목 입력 */}
@@ -117,21 +145,28 @@ export function NoteForm({ mode, initialData, onSuccess }: NoteFormProps) {
         )}
       </div>
 
-      {/* 본문 입력 */}
+      {/* 본문 입력 - 마크다운 편집기 */}
       <div className="space-y-2">
         <Label htmlFor="content">내용</Label>
-        <Textarea
-          id="content"
-          placeholder="노트 내용을 입력하세요"
-          {...register('content')}
-          disabled={isSubmitting}
-          className="w-full min-h-[300px] resize-y"
-          rows={15}
+        <MarkdownEditor
+          initialContent={currentContent}
+          onSave={handleContentUpdate}
+          onCancel={() => setIsEditingContent(false)}
+          isLoading={isSubmitting}
+          defaultEditMode={true}
         />
         {errors.content && (
           <p className="text-sm text-red-600">{errors.content.message}</p>
         )}
       </div>
+
+      {/* AI 도우미 섹션 */}
+      <NoteAIAssistant
+        content={currentContent || watchedContent || ''}
+        onSummaryGenerated={setAiSummary}
+        onTagsGenerated={setAiTags}
+        disabled={isSubmitting}
+      />
 
       {/* 에러 메시지 */}
       {error && (

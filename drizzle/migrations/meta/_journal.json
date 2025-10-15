@@ -8,6 +8,20 @@
       "when": 1760408058597,
       "tag": "0000_greedy_onslaught",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1760427721516,
+      "tag": "0001_spicy_johnny_storm",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1760483456753,
+      "tag": "0002_aromatic_lucky_pierre",
+      "breakpoints": true
     }
   ]
 }
