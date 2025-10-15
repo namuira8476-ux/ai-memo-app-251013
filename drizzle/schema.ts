@@ -41,7 +41,7 @@ export const noteTags = pgTable('note_tags', {
 // 요약 테이블
 export const summaries = pgTable('summaries', {
   id: uuid('id').primaryKey().defaultRandom(),
-  noteId: uuid('note_id').notNull().references(() => notes.id, { onDelete: 'cascade' }),
+  noteId: uuid('note_id').notNull().references(() => notes.id, { onDelete: 'cascade' }).unique(), // 유니크 제약조건 추가
   model: text('model').notNull(), // AI 모델 이름 (예: "gemini-pro")
   content: text('content').notNull(), // 요약 내용
   createdAt: timestamp('created_at').defaultNow().notNull(),

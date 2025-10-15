@@ -22,8 +22,19 @@ export default async function NewNotePage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-900">새 노트 작성</h1>
         <p className="mt-2 text-sm text-gray-600">
-          제목과 내용을 입력하여 새로운 노트를 만드세요
+          제목과 마크다운 내용을 입력하여 새로운 노트를 만드세요
         </p>
+        <div className="mt-2 text-xs text-gray-500">
+          💡 마크다운 문법을 사용하여 텍스트를 포맷팅할 수 있습니다. 
+          <a 
+            href="https://www.markdownguide.org/basic-syntax/" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="text-blue-600 hover:text-blue-800 ml-1"
+          >
+            마크다운 가이드 보기
+          </a>
+        </div>
       </div>
 
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">

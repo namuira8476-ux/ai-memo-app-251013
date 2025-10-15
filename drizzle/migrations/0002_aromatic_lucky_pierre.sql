@@ -1,0 +1,1 @@
+ALTER TABLE "summaries" ADD CONSTRAINT "summaries_note_id_unique" UNIQUE("note_id");
