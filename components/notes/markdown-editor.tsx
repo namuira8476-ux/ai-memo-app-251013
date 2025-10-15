@@ -9,6 +9,7 @@ import { useState } from 'react'
 import dynamic from 'next/dynamic'
 import { Button } from '@/components/ui/button'
 import { Save, Edit3, X } from 'lucide-react'
+import { MarkdownViewer } from './markdown-viewer'
 
 // 동적 임포트로 SSR 문제 방지
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { 
@@ -72,11 +73,7 @@ export function MarkdownEditor({
           </Button>
         </div>
         
-        <div className="prose prose-sm max-w-none">
-          <div className="whitespace-pre-wrap text-gray-800">
-            {initialContent}
-          </div>
-        </div>
+        <MarkdownViewer content={initialContent} />
       </div>
     )
   }
