@@ -13,7 +13,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 
 interface SignInFormProps {
-  // onSubmit prop 제거 - 클라이언트에서 직접 처리
+  onSubmit?: () => void
 }
 
 export function SignInForm({}: SignInFormProps) {
@@ -49,7 +49,7 @@ export function SignInForm({}: SignInFormProps) {
     }
 
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       })
@@ -64,7 +64,7 @@ export function SignInForm({}: SignInFormProps) {
         // 로그인 성공
         router.push('/')
       }
-    } catch (err) {
+    } catch {
       setError('예상치 못한 오류가 발생했습니다. 다시 시도해주세요.')
     } finally {
       setLoading(false)

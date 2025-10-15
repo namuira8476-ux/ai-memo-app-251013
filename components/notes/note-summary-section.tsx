@@ -5,19 +5,16 @@
 
 'use client'
 
-import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Loader2, Sparkles } from 'lucide-react'
 
 interface NoteSummarySectionProps {
-  noteId: string
   summary?: string
   onGenerate: () => void
   isLoading: boolean
 }
 
 export function NoteSummarySection({ 
-  noteId, 
   summary, 
   onGenerate, 
   isLoading 

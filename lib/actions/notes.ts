@@ -73,7 +73,7 @@ export async function createNote(data: {
         id: user.id,
         onboardingCompleted: false,
       })
-    } catch (e) {
+    } catch {
       // user_profiles에 이미 존재하는 경우 무시
     }
 
@@ -136,7 +136,7 @@ export async function getNotes(
     const offset = (validPage - 1) * limit
 
     // 3. 정렬 옵션에 따른 orderBy 절 설정
-    let orderByClause: any[]
+    let orderByClause: ReturnType<typeof asc | typeof desc>[]
     switch (sortBy) {
       case 'oldest':
         orderByClause = [asc(notes.createdAt)]
@@ -242,7 +242,6 @@ export async function getNoteById(noteId: string) {
       note: {
         ...note,
         summary: summary?.content,
-        imageUrl: note.imageUrl,
       },
     }
   } catch (error) {
@@ -486,7 +485,7 @@ export async function regenerateAI(noteId: string): Promise<{
 
   } catch (error) {
     const duration = Date.now() - startTime;
-    logError('regenerateAI', error, { noteId, duration });
+    logError('regenerateAI', error instanceof Error ? error.message : 'Unknown error', { noteId, duration });
     
     console.error('AI 재생성 중 오류 발생:', error)
     return {
@@ -639,7 +638,7 @@ export async function generateNoteSummary(noteId: string): Promise<{
         model: summaryResult.summary?.model || 'gemini-2.0-flash-001',
         content: summary,
       })
-    } catch (error) {
+    } catch {
       // 이미 요약이 있는 경우 업데이트
       await db.update(summaries)
         .set({
@@ -665,7 +664,7 @@ export async function generateNoteSummary(noteId: string): Promise<{
 
   } catch (error) {
     const duration = Date.now() - startTime;
-    logError('generateNoteSummary', error, { noteId, duration });
+    logError('generateNoteSummary', error instanceof Error ? error.message : 'Unknown error', { noteId, duration });
 
     console.error('AI 요약 생성 중 오류 발생:', error)
     return {

@@ -12,7 +12,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { createNote } from '@/lib/actions/notes'
 import { MarkdownEditor } from './markdown-editor'
@@ -44,9 +43,6 @@ export function NoteForm({ mode, initialData, onSuccess }: NoteFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [successMessage, setSuccessMessage] = useState<string | null>(null)
-  const [aiSummary, setAiSummary] = useState('')
-  const [aiTags, setAiTags] = useState<string[]>([])
-  const [isEditingContent, setIsEditingContent] = useState(false)
   const [currentContent, setCurrentContent] = useState(initialData?.content || '')
 
   // React Hook Form 설정
@@ -151,7 +147,7 @@ export function NoteForm({ mode, initialData, onSuccess }: NoteFormProps) {
         <MarkdownEditor
           initialContent={currentContent}
           onSave={handleContentUpdate}
-          onCancel={() => setIsEditingContent(false)}
+          onCancel={() => {}}
           isLoading={isSubmitting}
           defaultEditMode={true}
         />
@@ -163,8 +159,8 @@ export function NoteForm({ mode, initialData, onSuccess }: NoteFormProps) {
       {/* AI 도우미 섹션 */}
       <NoteAIAssistant
         content={currentContent || watchedContent || ''}
-        onSummaryGenerated={setAiSummary}
-        onTagsGenerated={setAiTags}
+        onSummaryGenerated={() => {}} // Empty function since we're not using the summary
+        onTagsGenerated={() => {}} // Empty function since we're not using the tags
         disabled={isSubmitting}
       />
 

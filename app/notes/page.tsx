@@ -20,7 +20,7 @@ interface NotesPageProps {
 }
 
 async function NotesList({ page, sortBy }: { page: number; sortBy: string }) {
-  const result = await getNotes(page, sortBy as any)
+  const result = await getNotes(page, sortBy as 'newest' | 'oldest' | 'title-asc' | 'title-desc' | 'updated' | undefined)
 
   if (!result.success) {
     return (

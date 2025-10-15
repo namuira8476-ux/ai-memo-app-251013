@@ -110,7 +110,7 @@ export function getRecentApiLogs(limit: number = 50): ApiCallLog[] {
 export function logError(
   operation: string, 
   error: Error | string, 
-  context?: Record<string, any>
+  context?: Record<string, unknown>
 ): void {
   const errorMessage = error instanceof Error ? error.message : error;
   const errorStack = error instanceof Error ? error.stack : undefined;
@@ -124,7 +124,7 @@ export function logError(
 
   // API 호출 로그에도 기록
   logApiCall({
-    operation: operation as any,
+    operation: operation as 'summarize' | 'tag' | 'client_init',
     success: false,
     duration: 0,
     error: errorMessage
@@ -199,7 +199,7 @@ export function cleanupLogs(daysToKeep: number = 30): void {
   apiCallLogs.push(...logsToKeep);
 
   // 토큰 사용량 맵 정리
-  for (const [date, usage] of tokenUsageMap.entries()) {
+  for (const [date] of tokenUsageMap.entries()) {
     if (new Date(date) < cutoffDate) {
       tokenUsageMap.delete(date);
     }

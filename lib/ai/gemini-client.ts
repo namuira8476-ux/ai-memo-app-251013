@@ -22,7 +22,7 @@ export interface TagResponse {
 export interface GeminiError {
   message: string;
   code?: string;
-  details?: any;
+  details?: Record<string, unknown>;
 }
 
 // Gemini API 클라이언트 인스턴스

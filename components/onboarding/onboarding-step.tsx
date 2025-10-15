@@ -6,13 +6,12 @@
 'use client'
 
 interface OnboardingStepProps {
-  stepNumber: number
   title: string
   description: string
   icon: React.ReactNode
 }
 
-export function OnboardingStep({ stepNumber, title, description, icon }: OnboardingStepProps) {
+export function OnboardingStep({ title, description, icon }: OnboardingStepProps) {
   return (
     <div className="flex flex-col items-center justify-center text-center space-y-6 py-8 px-4">
       {/* 아이콘 */}
@@ -32,6 +31,7 @@ export function OnboardingStep({ stepNumber, title, description, icon }: Onboard
     </div>
   )
 }
+
 
 
 

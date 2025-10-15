@@ -4,11 +4,8 @@
 // 관련 파일: lib/actions/notes.ts, app/notes/[id]/loading.tsx, app/notes/[id]/not-found.tsx
 
 import { notFound, redirect } from 'next/navigation'
-import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { getNoteById } from '@/lib/actions/notes'
-import { Button } from '@/components/ui/button'
-import { DeleteNoteDialog } from '@/components/notes/delete-note-dialog'
 import { NoteDetailClient } from './note-detail-client'
 
 interface NoteDetailPageProps {

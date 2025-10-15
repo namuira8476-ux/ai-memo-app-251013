@@ -60,7 +60,7 @@ export function PasswordUpdateForm() {
         // 비밀번호 업데이트 성공 시 로그인 페이지로 리다이렉트
         router.push('/auth/signin?message=password-updated')
       }
-    } catch (err) {
+    } catch {
       setError('예상치 못한 오류가 발생했습니다. 다시 시도해주세요.')
     } finally {
       setLoading(false)

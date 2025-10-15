@@ -105,7 +105,6 @@ export function NoteDetailClient({ note, isModified }: NoteDetailClientProps) {
 
       {/* AI 요약 섹션 */}
       <NoteSummarySection
-        noteId={note.id}
         summary={currentSummary}
         onGenerate={handleGenerate}
         isLoading={isGenerating}

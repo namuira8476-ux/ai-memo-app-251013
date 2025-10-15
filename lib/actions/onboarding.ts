@@ -6,7 +6,6 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
 
 /**
  * 온보딩 완료 처리
@@ -60,6 +59,7 @@ export async function checkOnboardingStatus() {
   
   return { completed: onboardingCompleted }
 }
+
 
 
 

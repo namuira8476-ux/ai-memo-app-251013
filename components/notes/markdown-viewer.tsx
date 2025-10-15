@@ -53,35 +53,32 @@ export function MarkdownViewer({ content, className = '' }: MarkdownViewerProps)
         rehypePlugins={[rehypeRaw]}
         components={{
           // 커스텀 스타일링
-          h1: ({ node, ...props }) => <h1 className="text-3xl font-bold mb-4 mt-6" {...props} />,
-          h2: ({ node, ...props }) => <h2 className="text-2xl font-bold mb-3 mt-5" {...props} />,
-          h3: ({ node, ...props }) => <h3 className="text-xl font-bold mb-2 mt-4" {...props} />,
-          p: ({ node, ...props }) => <p className="mb-4 text-gray-800 leading-relaxed" {...props} />,
-          ul: ({ node, ...props }) => <ul className="list-disc list-inside mb-4 space-y-2" {...props} />,
-          ol: ({ node, ...props }) => <ol className="list-decimal list-inside mb-4 space-y-2" {...props} />,
-          li: ({ node, ...props }) => <li className="text-gray-800" {...props} />,
-          code: ({ node, inline, ...props }: any) => 
-            inline ? (
-              <code className="bg-gray-100 text-red-600 px-1.5 py-0.5 rounded text-sm" {...props} />
-            ) : (
-              <code className="block bg-gray-100 p-4 rounded-lg text-sm overflow-x-auto" {...props} />
-            ),
-          pre: ({ node, ...props }) => <pre className="mb-4 overflow-x-auto" {...props} />,
-          blockquote: ({ node, ...props }) => (
+          h1: ({ ...props }) => <h1 className="text-3xl font-bold mb-4 mt-6" {...props} />,
+          h2: ({ ...props }) => <h2 className="text-2xl font-bold mb-3 mt-5" {...props} />,
+          h3: ({ ...props }) => <h3 className="text-xl font-bold mb-2 mt-4" {...props} />,
+          p: ({ ...props }) => <p className="mb-4 text-gray-800 leading-relaxed" {...props} />,
+          ul: ({ ...props }) => <ul className="list-disc list-inside mb-4 space-y-2" {...props} />,
+          ol: ({ ...props }) => <ol className="list-decimal list-inside mb-4 space-y-2" {...props} />,
+          li: ({ ...props }) => <li className="text-gray-800" {...props} />,
+          code: ({ ...props }) => (
+            <code className="bg-gray-100 text-red-600 px-1.5 py-0.5 rounded text-sm" {...props} />
+          ),
+          pre: ({ ...props }) => <pre className="mb-4 overflow-x-auto" {...props} />,
+          blockquote: ({ ...props }) => (
             <blockquote className="border-l-4 border-gray-300 pl-4 italic text-gray-700 mb-4" {...props} />
           ),
-          a: ({ node, ...props }) => (
+          a: ({ ...props }) => (
             <a className="text-blue-600 hover:text-blue-800 underline" target="_blank" rel="noopener noreferrer" {...props} />
           ),
-          hr: ({ node, ...props }) => <hr className="my-6 border-gray-300" {...props} />,
-          table: ({ node, ...props }) => (
+          hr: ({ ...props }) => <hr className="my-6 border-gray-300" {...props} />,
+          table: ({ ...props }) => (
             <div className="overflow-x-auto mb-4">
               <table className="min-w-full divide-y divide-gray-200 border" {...props} />
             </div>
           ),
-          thead: ({ node, ...props }) => <thead className="bg-gray-50" {...props} />,
-          th: ({ node, ...props }) => <th className="px-4 py-2 text-left text-sm font-semibold text-gray-900" {...props} />,
-          td: ({ node, ...props }) => <td className="px-4 py-2 text-sm text-gray-800 border-t" {...props} />,
+          thead: ({ ...props }) => <thead className="bg-gray-50" {...props} />,
+          th: ({ ...props }) => <th className="px-4 py-2 text-left text-sm font-semibold text-gray-900" {...props} />,
+          td: ({ ...props }) => <td className="px-4 py-2 text-sm text-gray-800 border-t" {...props} />,
         }}
       >
         {content}

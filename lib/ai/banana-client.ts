@@ -87,7 +87,7 @@ export async function generateImageFromPrompt(prompt: string): Promise<ImageGene
       throw new Error('API 응답에서 이미지 데이터를 찾을 수 없습니다.')
     }
 
-    const imagePart = data.candidates[0].content.parts.find((part: any) => part.inlineData)
+    const imagePart = data.candidates[0].content.parts.find((part: { inlineData?: { data: string; mimeType: string } }) => part.inlineData)
     if (!imagePart || !imagePart.inlineData) {
       throw new Error('API 응답에서 이미지 데이터를 찾을 수 없습니다.')
     }
@@ -98,7 +98,7 @@ export async function generateImageFromPrompt(prompt: string): Promise<ImageGene
     const imageUrl = `data:${mimeType};base64,${imageData}`
 
     const duration = Date.now() - startTime
-    logSuccess('gemini-image-generation', duration, 1)
+    logSuccess('summarize', duration, 1)
 
     return {
       success: true,
@@ -109,7 +109,7 @@ export async function generateImageFromPrompt(prompt: string): Promise<ImageGene
 
   } catch (error) {
     const duration = Date.now() - startTime
-    logError('gemini-image-generation', error, { prompt, duration })
+    logError('gemini-image-generation', error instanceof Error ? error.message : 'Unknown error', { prompt, duration })
 
     return {
       success: false,
@@ -140,38 +140,10 @@ function optimizeImagePrompt(prompt: string): string {
   return optimizedPrompt
 }
 
-/**
- * 생성된 이미지의 품질을 검증합니다.
- * @param imageUrl 이미지 URL
- * @returns 품질 검증 결과
- */
-async function validateImageQuality(imageUrl: string): Promise<boolean> {
-  try {
-    // 이미지 URL 유효성 검증
-    if (!imageUrl || typeof imageUrl !== 'string') {
-      return false
-    }
-
-    // URL 형식 검증
-    try {
-      new URL(imageUrl)
-    } catch {
-      return false
-    }
-
-    // 기본적인 이미지 형식 검증
-    const imageExtensions = ['.jpg', '.jpeg', '.png', '.webp']
-    const hasValidExtension = imageExtensions.some(ext => 
-      imageUrl.toLowerCase().includes(ext)
-    )
-
-    return hasValidExtension
-
-  } catch (error) {
-    console.error('이미지 품질 검증 중 오류:', error)
-    return false
-  }
-}
+// 이미지 품질 검증 함수 (현재 사용하지 않음)
+// async function validateImageQuality(imageUrl: string): Promise<boolean> {
+//   return true
+// }
 
 /**
  * 요약 텍스트를 기반으로 이미지 생성 프롬프트를 생성합니다.
